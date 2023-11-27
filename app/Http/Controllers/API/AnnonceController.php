@@ -42,16 +42,13 @@ class AnnonceController extends Controller
             'titre' => 'required',
             'description' => 'required',
             'image' => 'required',
-            'date' => 'required',
             'prix' => 'required',
-            'statut' => 'required',
             'location' => 'required',
-            'nbr_vu' => 'required',
             'cat_id' => 'required'
         ]);
     
         $annonce = Annonce::create($request->all());
-        return response()->json($annonce, 201);
+        return response()->json($annonce, 200);
     }
 
     /**
@@ -78,11 +75,8 @@ class AnnonceController extends Controller
             'titre' => 'required',
             'description' => 'required',
             'image' => 'required',
-            'date' => 'required',
             'prix' => 'required',
-            'statut' => 'required',
             'location' => 'required',
-            'nbr_vu' => 'required',
             'cat_id' => 'required'
         ]);
     

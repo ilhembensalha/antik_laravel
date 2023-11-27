@@ -18,14 +18,11 @@ return new class extends Migration
             $table->string('titre');
             $table->string('description');
             $table->string('image');
-            $table->date('date');
             $table->double('prix', 8, 2);
-            $table->string('statut');
+            $table->string('statut')->default('avendre');
+            $table->string('accepte')->default('non');
             $table->string('location');
-            $table->integer('nbr_vu');
-           
-            
-            
+            $table->integer('nbr_vu')->default(0);
             $table->timestamps();
             $table->unsignedBigInteger('cat_id');
             $table->foreign('cat_id')->references('id')->on('categories');

@@ -41,3 +41,6 @@ Route::post('/categories', [CategorieController::class, 'store'])->name('categor
 Route::get('/categories/{categorie}', [CategorieController::class, 'show'])->name('categories.show');
 Route::match(['put', 'patch'], 'categories/{categorie}', [CategorieController::class, 'update'])->name('categories.update');
 Route::delete('/categories/{categorie}', [CategorieController::class, 'destroy'])->name('categories.destroy');
+Route::get('/getname', function () {
+    return response()->json(['message' => 'SLIM KHFIFI MPDAM']);
+});

@@ -101,6 +101,17 @@
                                     {{ __('User ') }}
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('categories.index') }}">
+                                    {{ __('Categories ') }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('user.index') }}">
+                                    {{ __('Annonces ') }}
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

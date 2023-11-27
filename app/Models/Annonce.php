@@ -12,4 +12,15 @@ class Annonce extends Model
 public function categorie() {
     return $this->belongsTo(Categorie::class);
 } 
+/**
+ * The attributes that are mass assignable.
+ *
+ * @var array<int, string>
+ */
+protected $fillable = [
+    'titre','description','image','prix','location','statut','nbr_vu','cat_id','accepte'
+   
+];
+
+
 }

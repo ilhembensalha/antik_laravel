@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -26,25 +27,23 @@ class UserController extends Controller
         {
             return view('users.create');
         }
-    
         public function store(Request $request)
         {
-            // Valider les données du formulaire
             $request->validate([
-                'name' => 'required',
+                'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users',
                 'password' => 'required|min:6',
             ]);
-    
-            // Enregistrer le nouvel utilisateur
+        
             User::create([
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
-                'password' => bcrypt($request->input('password')),
+                'password' => Hash::make($request->input('password')),
             ]);
-    
-            return redirect('/users')->with('success', 'Utilisateur créé avec succès.');
+        
+            return redirect()->route('users.index')->with('success', 'User added successfully');
         }
+        
     
         public function show($id)
         {
@@ -58,21 +57,30 @@ class UserController extends Controller
             return view('users.edit', ['user' => $user]);
         }
     
+       /* public function update(Request $request, User $user)
+        {
+            // Validate the request data here, if necessary
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email,' . $user->id,
+            ]);
+        
+            // Update the user's information
+            $user->update($validatedData);
+        
+            // Redirect to a success page or return a response
+            return redirect()->route('users.index')->with('success', 'User updated successfully');
+        }*/
         public function update(Request $request, $id)
         {
-            // Valider les données du formulaire
-            $request->validate([
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email,' . $id,
-            ]);
-    
-            // Mettre à jour l'utilisateur
-            $user = User::find($id);
-            $user->name = $request->input('name');
-            $user->email = $request->input('email');
-            $user->save();
-    
-            return redirect('/users')->with('success', 'Utilisateur mis à jour avec succès.');
+          $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users,email,',
+          ]);
+          $user = User::find($id);
+          $user->update($request->all());
+          return redirect()->route('users.index')
+            ->with('success', 'user updated successfully.');
         }
     
         public function destroy($id)

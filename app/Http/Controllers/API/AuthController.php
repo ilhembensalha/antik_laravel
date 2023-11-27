@@ -17,20 +17,23 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 401);
         }
-
+    
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
-        $success['token'] =  $user->createToken('Bearer')->plainTextToken;
+    
+        // Do not generate a token for registration
+        // $success['token'] =  $user->createToken('Bearer')->plainTextToken;
+    
         $success['name'] = $user->name;
-
+    
         return response()->json(['success' => $success], 200);
     }
-
+    
     public function login()
     {
         if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {

@@ -12,54 +12,29 @@
                     <thead class="thead-light">
                         <tr>
                             <th scope="col">Name</th>
-                            <th scope="col">Email</th>
                             <th scope="col">Creation Date</th>
-                            <th scope="col"> <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUserModal">Add User</button>
+                            <th scope="col"> <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUserModal">Add </button>
 </th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($users as $user)
+                        @foreach($categories as $categorie)
                             <tr>
-                                <td>{{ $user->name }}</td>
-                                <td>
-                                    <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
-                                </td>
-                                <td>{{ $user->created_at }}</td>
+                                <td>{{ $categorie->nomcat }}</td>
+                               
+                                <td>{{ $categorie->created_at }}</td>
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Actions">
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailsModal{{ $user->id }}">Details</button>
-                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editModal{{ $user->id }}">Edit</button>
-                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $user->id }}">Delete</button>
+                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editModal{{ $categorie->id }}">Edit</button>
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $categorie->id }}">Delete</button>
                                     </div>
                                 </td>
                             </tr>
 
-                            <!-- Modal for Details -->
-                            <div class="modal fade" id="detailsModal{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="detailsModalLabel">User Details</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <!-- Display user details here -->
-                                            <p>Name: {{ $user->name }}</p>
-                                            <p>Email: {{ $user->email }}</p>
-                                            <p>Creation Date: {{ $user->created_at }}</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                           
 
                            <!-- Modal for Edit -->
-<div class="modal fade" id="editModal{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal fade" id="editModal{{ $categorie->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -69,18 +44,15 @@
                 </button>
             </div>
             <div class="modal-body">
-            <form method="POST" action="{{ route('users.update', ['id' => $user->id]) }}">
+            <form method="POST" action="{{ route('categories.update', ['id' => $categorie->id]) }}">
                     @csrf
                     @method('PUT')
                     <!-- Form fields for editing user -->
                     <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}">
+                        <label for="categorie">categorie</label>
+                        <input type="text" class="form-control" id="categorie" name="categorie" value="{{ $categorie->nomcat }}">
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}">
-                    </div>
+                   
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </form>
@@ -93,30 +65,23 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addUserModalLabel">Add User</h5>
+                <h5 class="modal-title" id="addUserModalLabel">Add </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <!-- Add User Form -->
-                <form method="POST" action="{{ route('users.store') }}">
+                <form method="POST" action="{{ route('categories.store') }}">
                     @csrf
                     <!-- Form fields for adding user -->
                     <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="User's name">
+                        <label for="nomcat">nomcat</label>
+                        <input type="text" class="form-control" id="nomcat" name="nomcat" placeholder="nomcat">
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="User's email">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="User's password">
-                    </div>
+                 
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add User</button>
+                    <button type="submit" class="btn btn-primary">Add categorie</button>
                 </form>
             </div>
         </div>
@@ -125,10 +90,10 @@
 
 
                          <!-- Modal for Delete -->
-<div class="modal fade" id="deleteModal{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteModal{{ $categorie->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form action="{{ route('users.destroy', ['id' => $user->id]) }}" method="post">
+            <form action="{{ route('categories.destroy', ['id' => $categorie->id]) }}" method="post">
                 @csrf
                 @method('DELETE')
                 <div class="modal-header">
@@ -157,16 +122,8 @@
             <!-- Le reste de votre code HTML -->
         </div>
     </div>
-
-
-
-
-    
     @include('layouts.footers.auth')
     </div>
-
-
-
 @endsection
 
 
