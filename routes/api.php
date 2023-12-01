@@ -23,6 +23,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 
+Route::put('/editProfile/{user_id}', [AuthController::class, 'editProfile'])->name('users.editProfile');
+Route::POST('/updateProfileImage/{user_id}', [App\Http\Controllers\API\AuthController::class, 'updateProfileImage']);
+Route::get('/getUserImage/{user_id}', [AuthController::class, 'getUserImage']);
+
 Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
 Route::post('/login', [App\Http\Controllers\API\AuthController::class, 'login']);
 Route::post('/logout', [App\Http\Controllers\API\AuthController::class, 'logout']);
