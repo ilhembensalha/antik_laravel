@@ -9,26 +9,44 @@ use Illuminate\Http\Request;
 class AnnonceController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $annonces = Annonce::all();
-        if ($annonces) {
-            return response()->json([
-                'status' => 200,
-                'annonces' => $annonces
-            ]);
-        } else {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Aucune annonces trouvé',
-            ]);
-        }
-       
+ * Display a listing of the resource.
+ *
+ * @return \Illuminate\Http\Response
+ */
+public function index()
+{
+    $annonces = Annonce::all();
+
+    if ($annonces->isEmpty()) {
+        return response()->json([
+            'status' => 404,
+            'message' => 'Aucune annonce trouvée',
+        ]);
     }
+
+    // Transform each annonce to include image details
+    $formattedAnnonces = $annonces->map(function ($annonce) {
+        return [
+            'id' => $annonce->id,
+            'titre' => $annonce->titre,
+            'description' => $annonce->description,
+            'prix' => $annonce->prix,
+            'location' => $annonce->location,
+            'cat_id' => $annonce->cat_id,
+            'user_id' => $annonce->user_id,
+            'image' => [
+                'path' => public_path('/uploads/image/' . $annonce->image),
+                'url' => asset('/uploads/image/' . $annonce->image),
+            ],
+        ];
+    });
+
+    return response()->json([
+        'status' => 200,
+        'annonces' => $formattedAnnonces,
+    ]);
+}
+
 
     /**
      * Store a newly created resource in storage.
@@ -41,28 +59,112 @@ class AnnonceController extends Controller
         $request->validate([
             'titre' => 'required',
             'description' => 'required',
-            'image' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif',
             'prix' => 'required',
+            'user_id' => 'required',
             'location' => 'required',
-            'cat_id' => 'required'
+            'livraison' => 'required',
+            'cat_id' => 'required',
+            'user_id' => 'required'
         ]);
     
-        $annonce = Annonce::create($request->all());
-        return response()->json($annonce, 200);
+        $annonce = new Annonce();
+        $annonce->titre = $request->input('titre');
+        $annonce->description = $request->input('description');
+        $annonce->prix = $request->input('prix');
+        $annonce->location = $request->input('location');
+        $annonce->livraison = $request->input('livraison');
+        $annonce->cat_id = $request->input('cat_id');
+        $annonce->user_id = $request->input('user_id');
+    
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+    
+            // Save the file to the storage disk
+            \Image::make($image)->resize(300, 300)->save(public_path('/uploads/image/' . $filename));
+    
+            // Update the user's avatar in the database
+            $annonce->image = $filename;
+        }
+    
+        $annonce->save();
+    
+        return response()->json([
+            'success' => 'Annonce ajoutée avec succès',
+            'status' => 200,
+        ]);
+    }
+    
+
+ /**
+ * Display the specified resource.
+ *
+ * @param  \App\Models\Annonce  $annonce
+ * @return \Illuminate\Http\Response
+ */
+public function show(Annonce $annonce)
+{
+    if (!$annonce) {
+        return response()->json(['error' => 'Annonce not found'], 404);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Annonce  $annonce
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Annonce $annonce)
-    {
-        return response()->json($annonce, 200);
+    // Add non-image details to the response
+    $responseData = [
+        'id' => $annonce->id,
+        'titre' => $annonce->titre,
+        'description' => $annonce->description,
+        'prix' => $annonce->prix,
+        'location' => $annonce->location,
+        'livraison' => $annonce->livraison,
+        'cat_id' => $annonce->cat_id,
+        'user_id' => $annonce->user_id,
+    ];
+
+    return response()->json($responseData, 200);
+}
+
+public function showImage(Annonce $annonce)
+{
+    if (!$annonce) {
+        return response()->json(['error' => 'Annonce not found'], 404);
     }
 
-    /**
+    // Assuming your Annonce model has an 'image' attribute
+    $imagePath = public_path('/uploads/image/' . $annonce->image);
+
+    // Check if the image file exists
+    if (file_exists($imagePath)) {
+        // Get the file extension to determine the content type
+        $fileExtension = pathinfo($imagePath, PATHINFO_EXTENSION);
+
+        // Determine content type based on file extension
+        $contentType = 'image/jpeg'; // Default to JPEG
+        if ($fileExtension === 'png') {
+            $contentType = 'image/png';
+        } elseif ($fileExtension === 'gif') {
+            $contentType = 'image/gif';
+        }
+
+        // Return the image file with appropriate content type
+        return response()->file($imagePath, ['Content-Type' => $contentType]);
+    } else {
+        return response()->json(['error' => 'Image not found'], 404);
+    }
+}
+
+
+
+   /**
+ * Update the specified resource in storage.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @param  \App\Models\Annonce  $annonce
+ * @return \Illuminate\Http\Response
+ */
+
+
+  /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -74,13 +176,33 @@ class AnnonceController extends Controller
         $request->validate([
             'titre' => 'required',
             'description' => 'required',
-            'image' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif', // Validate image format
             'prix' => 'required',
             'location' => 'required',
+            'livraison' => 'required',
             'cat_id' => 'required'
         ]);
-    
-        $annonce->update($request->all());
+
+        // Update the fields except for 'image'
+        $annonce->update($request->except('image'));
+
+        // Handle image update
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+
+            \Image::make($image)->resize(300, 300)->save(public_path('/uploads/image/' . $filename));
+
+            // Delete the old image if it exists
+            if ($annonce->image) {
+                unlink(public_path('/uploads/image/' . $annonce->image));
+            }
+
+            // Update the image field in the database
+            $annonce->image = $filename;
+            $annonce->save();
+        }
+
         return response()->json($annonce, 200);
     }
 
@@ -92,7 +214,17 @@ class AnnonceController extends Controller
      */
     public function destroy(Annonce $annonce)
     {
+        if (!$annonce) {
+            return response()->json(['error' => 'Annonce not found'], 404);
+        }
+
+        // Delete the associated image if it exists
+        if ($annonce->image) {
+            unlink(public_path('/uploads/image/' . $annonce->image));
+        }
+
         $annonce->delete();
-    return response()->json(['message' => 'Annonce deleted'], 204);
+
+        return response()->json(['message' => 'Annonce deleted'], 204);
     }
 }

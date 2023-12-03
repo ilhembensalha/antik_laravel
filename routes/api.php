@@ -35,7 +35,10 @@ Route::get('/profile/{user_id}', [AuthController::class, 'profile'])->name('user
 Route::get('/annonces', [AnnonceController::class, 'index'])->name('annonces.index');
 Route::post('/annonces', [AnnonceController::class, 'store'])->name('annonces.store');
 Route::get('/annonces/{annonce}', [AnnonceController::class, 'show'])->name('annonces.show');
-Route::match(['put', 'patch'], 'annonces/{annonce}', [AnnonceController::class, 'update'])->name('annonces.update');
+Route::get('/annoncesImage/{annonce}', [AnnonceController::class, 'showImage']);
+
+Route::Post('annoncesupdate/{annonce}', [AnnonceController::class, 'update'])->name('annonces.update');
+
 Route::delete('/annonces/{annonce}', [AnnonceController::class, 'destroy'])->name('annonces.destroy');
 Route::resource('/categories', 'API\CategorieController');
 

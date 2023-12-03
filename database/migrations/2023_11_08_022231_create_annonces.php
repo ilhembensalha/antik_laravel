@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('titre');
             $table->string('description');
             $table->string('image');
+            $table->string('livraison');
             $table->double('prix', 8, 2);
             $table->string('statut')->default('avendre');
             $table->string('accepte')->default('non');
@@ -26,6 +27,8 @@ return new class extends Migration
             $table->timestamps();
             $table->unsignedBigInteger('cat_id');
             $table->foreign('cat_id')->references('id')->on('categories');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

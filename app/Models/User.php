@@ -12,6 +12,9 @@ use App\Http\Controllers\UserController;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    public function annonces() {
+        return $this->hasMany(Annonce::class);
+    }
 
     /**
      * The attributes that are mass assignable.

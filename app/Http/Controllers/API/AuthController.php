@@ -101,7 +101,11 @@ public function editProfile(Request $request, $user_id)
 }
 
 public function updateProfileImage(Request $request, $user_id)
+
 {
+    $request->validate([
+        'avatar' => 'required|image|mimes:jpeg,png,jpg,gif',
+    ]);
     if ($request->hasFile('avatar')) {
         $avatar = $request->file('avatar');
         $filename = time() . '.' . $avatar->getClientOriginalExtension();
@@ -124,6 +128,8 @@ public function updateProfileImage(Request $request, $user_id)
         'message' => 'Aucune image n\'a été fournie.',
         'status' => 400,
     ]);
+  Log::error('Uploaded file details: ' . json_encode($request->file('avatar')));
+
 }
 public function getUserImage($user_id)
 {
