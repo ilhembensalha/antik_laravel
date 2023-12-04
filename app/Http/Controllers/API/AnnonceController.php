@@ -43,7 +43,7 @@ public function index()
 
     return response()->json([
         'status' => 200,
-        'annonces' => $formattedAnnonces,
+        'annonces' => $formattedAnnonces->toArray(),
     ]);
 }
 
