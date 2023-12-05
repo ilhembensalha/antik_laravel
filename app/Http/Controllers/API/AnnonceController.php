@@ -15,7 +15,9 @@ class AnnonceController extends Controller
  */
 public function index()
 {
-    $annonces = Annonce::all();
+    $accepte = "oui"; // Replace this with your actual value
+
+    $annonces = Annonce::where('accepte', $accepte)->get();
 
     if ($annonces->isEmpty()) {
         return response()->json([
@@ -97,62 +99,35 @@ public function index()
     }
     
 
- /**
- * Display the specified resource.
- *
- * @param  \App\Models\Annonce  $annonce
- * @return \Illuminate\Http\Response
- */
-public function show(Annonce $annonce)
-{
-    if (!$annonce) {
-        return response()->json(['error' => 'Annonce not found'], 404);
-    }
-
-    // Add non-image details to the response
-    $responseData = [
-        'id' => $annonce->id,
-        'titre' => $annonce->titre,
-        'description' => $annonce->description,
-        'prix' => $annonce->prix,
-        'location' => $annonce->location,
-        'livraison' => $annonce->livraison,
-        'cat_id' => $annonce->cat_id,
-        'user_id' => $annonce->user_id,
-    ];
-
-    return response()->json($responseData, 200);
-}
-
-public function showImage(Annonce $annonce)
-{
-    if (!$annonce) {
-        return response()->json(['error' => 'Annonce not found'], 404);
-    }
-
-    // Assuming your Annonce model has an 'image' attribute
-    $imagePath = public_path('/uploads/image/' . $annonce->image);
-
-    // Check if the image file exists
-    if (file_exists($imagePath)) {
-        // Get the file extension to determine the content type
-        $fileExtension = pathinfo($imagePath, PATHINFO_EXTENSION);
-
-        // Determine content type based on file extension
-        $contentType = 'image/jpeg'; // Default to JPEG
-        if ($fileExtension === 'png') {
-            $contentType = 'image/png';
-        } elseif ($fileExtension === 'gif') {
-            $contentType = 'image/gif';
+    public function show(Annonce $annonce)
+    {
+        if (!$annonce) {
+            return response()->json(['error' => 'Annonce not found'], 404);
         }
-
-        // Return the image file with appropriate content type
-        return response()->file($imagePath, ['Content-Type' => $contentType]);
-    } else {
-        return response()->json(['error' => 'Image not found'], 404);
+    
+        // Add details to the response
+        $responseData = [
+            'id' => $annonce->id,
+            'titre' => $annonce->titre,
+            'description' => $annonce->description,
+            'prix' => $annonce->prix,
+            'location' => $annonce->location,
+            'livraison' => $annonce->livraison,
+            'cat_id' => $annonce->cat_id,
+            'user_id' => $annonce->user_id,
+            'image' => [
+                'path' => public_path('/uploads/image/' . $annonce->image),
+                'url' => asset('/uploads/image/' . $annonce->image),
+            ],
+        ];
+    
+        // Assuming your Annonce model has an 'image' attribute
+        
+    
+        return response()->json($responseData, 200);
+     
     }
-}
-
+    
 
 
    /**
