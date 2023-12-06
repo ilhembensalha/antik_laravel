@@ -24,10 +24,13 @@ class CategorieController extends Controller
         return response()->json($categorie, 201);
     }
 
-    public function show(Categorie $categorie)
+    public function show($categorie)
     {
-        return response()->json($categorie, 200);
+      
+        $cat = Categorie::find($categorie);
+        return response()->json($cat, 200);
     }
+
 
     public function update(Request $request, Categorie $categorie)
     {

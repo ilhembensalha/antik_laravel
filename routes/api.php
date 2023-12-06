@@ -30,7 +30,7 @@ Route::get('/getUserImage/{user_id}', [AuthController::class, 'getUserImage']);
 Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
 Route::post('/login', [App\Http\Controllers\API\AuthController::class, 'login']);
 Route::post('/logout', [App\Http\Controllers\API\AuthController::class, 'logout']);
-Route::get('/profile/{user_id}', [AuthController::class, 'profile'])->name('users.profile');
+Route::get('/profile/{user_id}', [AuthController::class, 'profile']);
 
 Route::get('/annonces', [AnnonceController::class, 'index'])->name('annonces.index');
 Route::post('/annonces', [AnnonceController::class, 'store'])->name('annonces.store');
@@ -40,12 +40,13 @@ Route::get('/annoncesImage/{annonce}', [AnnonceController::class, 'showImage']);
 Route::Post('annoncesupdate/{annonce}', [AnnonceController::class, 'update'])->name('annonces.update');
 
 Route::delete('/annonces/{annonce}', [AnnonceController::class, 'destroy'])->name('annonces.destroy');
-Route::resource('/categories', 'API\CategorieController');
+//Route::resource('/categories', 'API\CategorieController');
 
 Route::get('/categories', [CategorieController::class, 'index'])->name('categories.index');
 Route::post('/categories', [CategorieController::class, 'store'])->name('categories.store');
 
-Route::get('/categories/{categorie}', [CategorieController::class, 'show'])->name('categories.show');
+Route::get('/categories/{categorie}', [App\Http\Controllers\API\CategorieController::class, 'show']);
+
 Route::match(['put', 'patch'], 'categories/{categorie}', [CategorieController::class, 'update'])->name('categories.update');
 Route::delete('/categories/{categorie}', [CategorieController::class, 'destroy'])->name('categories.destroy');
 Route::get('/getname', function () {

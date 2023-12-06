@@ -36,6 +36,7 @@ public function index()
             'location' => $annonce->location,
             'cat_id' => $annonce->cat_id,
             'user_id' => $annonce->user_id,
+            'created_at' => $annonce->created_at,
             'image' => [
                 'path' => public_path('/uploads/image/' . $annonce->image),
                 'url' => asset('/uploads/image/' . $annonce->image),
@@ -114,7 +115,9 @@ public function index()
             'location' => $annonce->location,
             'livraison' => $annonce->livraison,
             'cat_id' => $annonce->cat_id,
+            'statut'=> $annonce->statut,
             'user_id' => $annonce->user_id,
+            'created_at' => $annonce->created_at,
             'image' => [
                 'path' => public_path('/uploads/image/' . $annonce->image),
                 'url' => asset('/uploads/image/' . $annonce->image),
