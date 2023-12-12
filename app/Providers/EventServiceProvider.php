@@ -18,8 +18,14 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        
+        
     ];
-
+    protected $listenn = [
+        'App\Events\NewMessage' => [
+            'App\Listeners\SendNewMessageNotification',
+        ],
+    ];
     /**
      * Register any events for your application.
      *

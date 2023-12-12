@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AnnonceController;
 use App\Http\Controllers\API\CategorieController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\MessageController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -52,3 +53,6 @@ Route::delete('/categories/{categorie}', [CategorieController::class, 'destroy']
 Route::get('/getname', function () {
     return response()->json(['message' => 'SLIM KHFIFI MPDAM']);
 });
+
+Route::get('/messages/{userId}', [MessageController::class, 'getMessages']);
+Route::post('/messages/send', [MessageController::class, 'sendMessage']);

@@ -15,6 +15,17 @@ class User extends Authenticatable
     public function annonces() {
         return $this->hasMany(Annonce::class);
     }
+// app/Models/User.php
+
+public function messagesSent()
+{
+    return $this->hasMany(Message::class, 'sender_id');
+}
+
+public function messagesReceived()
+{
+    return $this->hasMany(Message::class, 'receiver_id');
+}
 
     /**
      * The attributes that are mass assignable.
