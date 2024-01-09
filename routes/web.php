@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategorieController;
-
+use App\Http\Controllers\AnnonceController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,12 +21,16 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Auth::routes();
 
-Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
+Route::middleware(['can:access-admin'])->group(function () {
+	Route::group(['middleware' => 'auth'], function () {
+		Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+	});
+	
 
-Route::group(['middleware' => 'auth'], function () {
+
+	Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+	Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 	Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);
 	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'App\Http\Controllers\ProfileController@edit']);
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'App\Http\Controllers\ProfileController@update']);
@@ -36,6 +40,7 @@ Route::group(['middleware' => 'auth'], function () {
 	 Route::get('table-list', function () {return view('pages.tables');})->name('table');
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
 	Route::get('/users', 'UserController@index')->name('users.index');
+
 
 
 // Afficher le formulaire de création d'utilisateur
@@ -58,10 +63,12 @@ Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.de
 
 Route::put('/users/{id}',[UserController::class, 'update'])->name('users.update');
 //Route::put('/users/{id}', [UserController::class, 'update']);
-});
 
 
+Route::get('/annonces', [AnnonceController::class, 'index'])->name('annonces.index');
+Route::delete('/annonces/{id}', [AnnonceController::class, 'destroy'])->name('annonces.destroy');
 Route::get('/categories', [CategorieController::class, 'index'])->name('categories.index');
+Route::post('/accepte/{id}', [AnnonceController::class, 'accepte']);
 
 
 //Route::get('/categories', 'CategorieController@index')->name('categories.index');
@@ -70,3 +77,5 @@ Route::post('/categories', [CategorieController::class, 'store'])->name('categor
 Route::get('/categories/{id}/edit', [CategorieController::class, 'edit'])->name('categories.edit');
 Route::put('/categories/{id}', [CategorieController::class, 'update'])->name('categories.update');
 Route::delete('/categories/{id}', [CategorieController::class, 'destroy'])->name('categories.destroy');
+
+});

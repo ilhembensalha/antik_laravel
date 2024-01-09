@@ -50,9 +50,17 @@ Route::get('/categories/{categorie}', [App\Http\Controllers\API\CategorieControl
 
 Route::match(['put', 'patch'], 'categories/{categorie}', [CategorieController::class, 'update'])->name('categories.update');
 Route::delete('/categories/{categorie}', [CategorieController::class, 'destroy'])->name('categories.destroy');
-Route::get('/getname', function () {
-    return response()->json(['message' => 'SLIM KHFIFI MPDAM']);
-});
+
 
 Route::get('/messages/{userId}', [MessageController::class, 'getMessages']);
 Route::post('/messages/send', [MessageController::class, 'sendMessage']);
+
+
+// Ajouter à la liste des favoris
+Route::post('/favorites/add', [FavoriteController::class, 'addToFavorites']);
+
+// Retirer des favoris
+Route::post('/favorites/remove', [FavoriteController::class, 'removeFromFavorites']);
+
+// Récupérer les favoris d'un utilisateur
+Route::get('/favorites', [FavoriteController::class, 'getFavorites']);

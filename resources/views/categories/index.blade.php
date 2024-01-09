@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
     @include('layouts.headers.cards')
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
         <div class="container-fluid">
@@ -26,7 +27,6 @@
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Actions">
                                         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editModal{{ $categorie->id }}">Edit</button>
-                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $categorie->id }}">Delete</button>
                                     </div>
                                 </td>
                             </tr>
@@ -50,7 +50,7 @@
                     <!-- Form fields for editing user -->
                     <div class="form-group">
                         <label for="categorie">categorie</label>
-                        <input type="text" class="form-control" id="categorie" name="categorie" value="{{ $categorie->nomcat }}">
+                        <input type="text" class="form-control" id="categorie" name="nomcat" value="{{$categorie->nomcat}}">
                     </div>
                    
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -125,8 +125,7 @@
     @include('layouts.footers.auth')
     </div>
 @endsection
-
-
+   <!-- 
 @push('js')
     <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.min.js"></script>
     <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.extension.js"></script>
@@ -135,5 +134,5 @@
     <script src="{{ asset('argon') }}/js/argon.js?v=1.0.0"></script>
 @endpush
     
-  
+  -->
 

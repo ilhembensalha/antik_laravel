@@ -43,6 +43,7 @@ class AuthController extends Controller
             $success['token'] = $user->createToken('Bearer')->plainTextToken;
             $success['name'] = $user->name;
             $success['email'] = $user->email;
+            $success['phone'] = $user->phone;
             $success['id'] = $user->id;
             return response()->json(['success' => $success], 200);
         } else {
@@ -85,12 +86,14 @@ public function editProfile(Request $request, $user_id)
         'name' => 'required|string',
         'email' => 'required|email|unique:users,email,'.$user_id,
         'password' => 'nullable|string|min:6',
+        'phone' => 'nullable|string|min:8',
     ]);
+
 
     $user = User::find($user_id);
     $user->name = $request->name;
     $user->email = $request->email;
-
+    $user->phone = $request->avatar;
     if ($request->password != null) {
         $user->password = bcrypt($request->password);
     }

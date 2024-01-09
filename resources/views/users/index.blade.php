@@ -14,14 +14,24 @@
                             <th scope="col">Name</th>
                             <th scope="col">Email</th>
                             <th scope="col">Creation Date</th>
-                            <th scope="col"> <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUserModal">Add User</button>
+                            <th scope="col"> <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addUserModal">Add </button>
 </th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($users as $user)
                             <tr>
-                                <td>{{ $user->name }}</td>
+                            <td scope="row">
+                      <div class="media align-items-center">
+                        <a href="#" class="avatar rounded-circle mr-3">
+                        <img alt="Image placeholder" src="{{ asset('uploads/avatar/' . $user->avatar) }}">
+                        </a>
+                        <div class="media-body">
+                          <span class="name mb-0 text-sm">{{ $user->name }}</span>
+                        </div>
+                      </div>
+                    </td>
+                              
                                 <td>
                                     <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                                 </td>
@@ -29,8 +39,6 @@
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Actions">
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailsModal{{ $user->id }}">Details</button>
-                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editModal{{ $user->id }}">Edit</button>
-                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ $user->id }}">Delete</button>
                                     </div>
                                 </td>
                             </tr>
@@ -47,9 +55,20 @@
                                         </div>
                                         <div class="modal-body">
                                             <!-- Display user details here -->
-                                            <p>Name: {{ $user->name }}</p>
+       
+                                            <div class="media align-items-center">
+                        <a href="#" class="avatar rounded-circle mr-3">
+                        <img alt="Image placeholder" src="{{ asset('uploads/avatar/' . $user->avatar) }}">
+                        </a>
+                        <div class="media-body">
+                          <span class="name mb-0 text-sm">{{ $user->name }}</span>
+                        </div>
+                      </div>
+                      <br>
                                             <p>Email: {{ $user->email }}</p>
+                                            <p>role: {{ $user->role }}</p>
                                             <p>Creation Date: {{ $user->created_at }}</p>
+                                           
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -58,36 +77,7 @@
                                 </div>
                             </div>
 
-                           <!-- Modal for Edit -->
-<div class="modal fade" id="editModal{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit User</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-            <form method="POST" action="{{ route('users.update', ['id' => $user->id]) }}">
-                    @csrf
-                    @method('PUT')
-                    <!-- Form fields for editing user -->
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}">
-                    </div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+
  <!-- Modal for CRREAT -->
 <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -116,7 +106,7 @@
                         <input type="password" class="form-control" id="password" name="password" placeholder="User's password">
                     </div>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add User</button>
+                    <button type="submit" class="btn btn-primary">Add </button>
                 </form>
             </div>
         </div>
@@ -124,32 +114,7 @@
 </div>
 
 
-                         <!-- Modal for Delete -->
-<div class="modal fade" id="deleteModal{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form action="{{ route('users.destroy', ['id' => $user->id]) }}" method="post">
-                @csrf
-                @method('DELETE')
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Delete User</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Confirmation message for deleting user -->
-                    <p>Are you sure you want to delete this user?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
+   
                         @endforeach
                     </tbody>
                 </table>

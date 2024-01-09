@@ -51,21 +51,26 @@ class CategorieController extends Controller
         $request->validate([
             'nomcat' => 'required|string|max:255',
         ]);
-
+    
         $categorie = Categorie::find($id);
-
-        if ($categorie) {
+    
+        if (!$categorie) {
+            return redirect()->route('categories.index')->with('error', 'Category not found');
+        }
+    
+        try {
             $categorie->update([
                 'nomcat' => $request->nomcat,
                 // Update other fields if needed
             ]);
-
-            return redirect()->route('categories.index')->with('success', 'Categorie updated successfully');
+    
+            return redirect()->route('categories.index')->with('success', 'Category updated successfully');
+        } catch (\Exception $e) {
+            // Log the error or handle it appropriately (e.g., show a user-friendly message)
+            return redirect()->route('categories.index')->with('error', 'Error updating category');
         }
-
-        return redirect()->route('categories.index')->with('error', 'Categorie not found');
     }
-
+    
     public function destroy($id)
     {
         $categorie = Categorie::find($id);
